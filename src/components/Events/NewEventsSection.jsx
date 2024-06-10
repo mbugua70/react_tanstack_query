@@ -42,7 +42,7 @@ export default function NewEventsSection() {
 
   // we are going to use react query instead of useEffect
 
-  const {data, isError, isPending, error} = useQuery({
+  const { data, isError, isPending, error } = useQuery({
     // the react queryKey is used to help in caching, hence if fetchEvents fetches the data for the first, it won't have to fetch the data once more.
     // the data fetched will be stored by react query
     // you can also configure how long the data stored by react query should be cached.
@@ -50,7 +50,11 @@ export default function NewEventsSection() {
     queryKey: ["events"],
     // the function below expect a promise/ fetch function functionality
     queryFn: fetchEvents,
-  })
+    // staletime is used to set after how long react query should update the new data backend .
+    staleTime: 5000,
+    // the key below is used to set how long the data should be cached in react query,
+    // gcTime: 1000,
+  });
 
 
   let content;
