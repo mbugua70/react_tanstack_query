@@ -1,0 +1,10 @@
+// React Query //
+
+- libraly used to help with sending http request and help keeping the frontend UI in sync with the data from the backend.
+
+// NOTE//
+- it does not send the http request/ you will have to write the code that send the request
+- tanstack query will handle data, error, loading, caching and more.
+
+// NOTES:: //
+ - Inorder to use the react query provided features, you must wrap the component that is going to use these features with the provided features frm the react query.
