@@ -1,8 +1,22 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEvent } from "../../util/http.js";
 
-import Header from '../Header.jsx';
+import Header from "../Header.jsx";
+import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 
 export default function EventDetails() {
+  const paramsId = useParams();
+
+  // tanstack fetching single data.
+
+  const { data, error, isError, isPending } = useQuery({
+    queryKey: ["single-events"],
+    queryFn: (signal) => fetchEvent(paramsId, signal),
+  });
+
+  console.log(data);
+
   return (
     <>
       <Outlet />
@@ -12,6 +26,7 @@ export default function EventDetails() {
         </Link>
       </Header>
       <article id="event-details">
+        {isPending && <LoadingIndicator />}
         <header>
           <h1>EVENT TITLE</h1>
           <nav>

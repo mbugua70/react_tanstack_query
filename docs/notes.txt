@@ -10,3 +10,7 @@
  - Inorder to use the react query provided features, you must wrap the component that is going to use these features with the provided features frm the react query.
  - The caching of image is done by the browser and react and react query has nothing to do with it
  - by using dynamic query key, react query will can cache the and reuse the different data keys based on the same query.
+
+ NB:: (useMutation & useQuery)
+  - useQuery can also be send a post request but but unlike useMuttion useQuery send the request instantly
+  - useMutation will only send request only when you want to send the request.
