@@ -4,7 +4,7 @@ import Modal from "../UI/Modal.jsx";
 import EventForm from "./EventForm.jsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchEvent, updateEvent, queryClient } from "../../util/http.js";
-import { queryClient } from "../../util/http.js";
+
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
 
@@ -17,25 +17,44 @@ export default function EditEvent() {
     queryFn: (signal) => fetchEvent(paramsId, signal),
   });
 
-  const {
-    mutate,
-    isPending: isPendingEdit,
-    isError: isErrorEdit,
-    error: editError,
-  } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: updateEvent,
     // onMutate will be exercuted instantly right before you get back a response from the updating function
     //  it will be called immediately once the mutate function is called.
-    onMutate: () => {
+    onMutate: async (data) => {
+      // cancelQueries will only cancel queries triggered by useQuery and not mutation
+
       // setQueryData takes two arguement
       // 1. its the key of the event you  want to edit.
       // 2. the second arguement is the new data
-      queryClient.setQueryData(["events", paramsId.id]);
+      const newEventData = data.event;
+      await queryClient.cancelQueries({ queryKey: ["events", paramsId.id] });
+      // the use of getQueryData to get the data
+      // takes the queryKey as its parameter
+      // it gets the previousOld data
+      const previousData = queryClient.getQueryData(["events", paramsId.id]);
+      queryClient.setQueryData(["events", paramsId.id], newEventData);
+
+      // inorder for the previousData to be part of the context we should return it
+      return { previousData };
+    },
+    //  has callback fun as its property
+    // the callBack fun has three parameter
+    // 1. error
+    // 2. newData
+    // 3. context method
+    onError: (errror, data, context) => {
+      queryClient.setQueryData(["events", paramsId.id], context.previousData);
+    },
+    // always refetch after error or success
+    onSettled: () => {
+      queryClient.invalidateQueries(["events", paramsId.id]);
     },
   });
 
   function handleSubmit(formData) {
     mutate({ id: paramsId.id, event: formData });
+    navigate("../");
   }
 
   function handleClose() {

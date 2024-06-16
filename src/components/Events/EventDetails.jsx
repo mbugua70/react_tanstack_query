@@ -45,7 +45,7 @@ export default function EventDetails() {
   // tanstack fetching single data.
 
   const { data, error, isError, isPending } = useQuery({
-    queryKey: ["events", { eventID: paramsId }],
+    queryKey: ["events", paramsId.id],
     queryFn: (signal) => fetchEvent(paramsId, signal),
   });
 
