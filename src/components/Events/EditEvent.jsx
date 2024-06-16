@@ -1,20 +1,76 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import Modal from '../UI/Modal.jsx';
-import EventForm from './EventForm.jsx';
+import Modal from "../UI/Modal.jsx";
+import EventForm from "./EventForm.jsx";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchEvent, updateEvent, queryClient } from "../../util/http.js";
+import { queryClient } from "../../util/http.js";
+import LoadingIndicator from "../UI/LoadingIndicator.jsx";
+import ErrorBlock from "../UI/ErrorBlock.jsx";
 
 export default function EditEvent() {
   const navigate = useNavigate();
+  const paramsId = useParams();
 
-  function handleSubmit(formData) {}
+  const { data, isError, isPending, error } = useQuery({
+    queryKey: ["events", paramsId.id],
+    queryFn: (signal) => fetchEvent(paramsId, signal),
+  });
 
-  function handleClose() {
-    navigate('../');
+  const {
+    mutate,
+    isPending: isPendingEdit,
+    isError: isErrorEdit,
+    error: editError,
+  } = useMutation({
+    mutationFn: updateEvent,
+    // onMutate will be exercuted instantly right before you get back a response from the updating function
+    //  it will be called immediately once the mutate function is called.
+    onMutate: () => {
+      // setQueryData takes two arguement
+      // 1. its the key of the event you  want to edit.
+      // 2. the second arguement is the new data
+      queryClient.setQueryData(["events", paramsId.id]);
+    },
+  });
+
+  function handleSubmit(formData) {
+    mutate({ id: paramsId.id, event: formData });
   }
 
-  return (
-    <Modal onClose={handleClose}>
-      <EventForm inputData={null} onSubmit={handleSubmit}>
+  function handleClose() {
+    navigate("../");
+  }
+
+  let content;
+
+  if (isPending) {
+    content = (
+      <div className="center">
+        <LoadingIndicator />
+      </div>
+    );
+  }
+
+  if (isError) {
+    content = (
+      <>
+        <ErrorBlock
+          title="Failed to load event"
+          message={error.info?.message || "Failed to load the event "}
+        />
+        <div className="form-actions">
+          <Link to="../" className="button">
+            Okay
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  if (data) {
+    content = (
+      <EventForm inputData={data} onSubmit={handleSubmit}>
         <Link to="../" className="button-text">
           Cancel
         </Link>
@@ -22,6 +78,8 @@ export default function EditEvent() {
           Update
         </button>
       </EventForm>
-    </Modal>
-  );
+    );
+  }
+
+  return <Modal onClose={handleClose}>{content}</Modal>;
 }
