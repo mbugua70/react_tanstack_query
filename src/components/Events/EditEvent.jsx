@@ -47,7 +47,8 @@ export default function EditEvent() {
       queryClient.setQueryData(["events", paramsId.id], context.previousData);
     },
     // always refetch after error or success
-    onSettled: () => {
+    onSettled: (data) => {
+      console.log(data);
       queryClient.invalidateQueries(["events", paramsId.id]);
     },
   });
