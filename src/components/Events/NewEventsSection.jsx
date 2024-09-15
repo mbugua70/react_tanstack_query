@@ -47,6 +47,7 @@ export default function NewEventsSection() {
     // the data fetched will be stored by react query
     // you can also configure how long the data stored by react query should be cached.
     // it has a value of array
+    // queryKey is mostly used for caching of data, hence the next time the request is fetched the cached data will be the one to be fetched.
     queryKey: ["events"],
     // the function below expect a promise/ fetch function functionality
     queryFn: fetchEvents,
