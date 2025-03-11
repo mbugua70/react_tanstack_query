@@ -23,6 +23,7 @@ export default function EditEvent() {
     //  it will be called immediately once the mutate function is called.
     onMutate: async (data) => {
       // cancelQueries will only cancel queries triggered by useQuery and not mutation
+      // the data passed as a parameter above is the new data, that is supposed to be updated.
 
       // setQueryData takes two arguement
       // 1. its the key of the event you  want to edit.
@@ -66,7 +67,7 @@ export default function EditEvent() {
 
   if (isPending) {
     content = (
-      <div className="center">
+      <div className='center'>
         <LoadingIndicator />
       </div>
     );
@@ -76,11 +77,11 @@ export default function EditEvent() {
     content = (
       <>
         <ErrorBlock
-          title="Failed to load event"
+          title='Failed to load event'
           message={error.info?.message || "Failed to load the event "}
         />
-        <div className="form-actions">
-          <Link to="../" className="button">
+        <div className='form-actions'>
+          <Link to='../' className='button'>
             Okay
           </Link>
         </div>
@@ -91,10 +92,10 @@ export default function EditEvent() {
   if (data) {
     content = (
       <EventForm inputData={data} onSubmit={handleSubmit}>
-        <Link to="../" className="button-text">
+        <Link to='../' className='button-text'>
           Cancel
         </Link>
-        <button type="submit" className="button">
+        <button type='submit' className='button'>
           Update
         </button>
       </EventForm>

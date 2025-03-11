@@ -165,6 +165,7 @@ app.delete('/events/:id', async (req, res) => {
 
   await fs.writeFile('./data/events.json', JSON.stringify(events));
 
+  // res.json({ message: 'Event deleted' });
   setTimeout(() => {
     res.json({ message: 'Event deleted' });
   }, 1000);

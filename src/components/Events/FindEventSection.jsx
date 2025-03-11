@@ -7,6 +7,7 @@ import EventItem from "./EventItem";
 
 export default function FindEventSection() {
   const searchElement = useRef();
+  // refs are not like state value they don't make the component to reexercute, hence we have use searchTerm in the queryKey for dynamic data fetch
   const [searchTerm, setSearchTerm] = useState();
 
   // react query implementation
@@ -14,7 +15,7 @@ export default function FindEventSection() {
   const { data, isLoading, isError, error } = useQuery({
     // below in the queryKey we can't use the same name as in the newEventSection since react query will treat this event the same hence show the same data of newEventSection
 
-    queryKey: ["event", { search: searchTerm }],
+    queryKey: ["events", { search: searchTerm }],
     queryFn: () => fetchEventsBySearch(searchTerm),
     // the property below is used to disable default searching of data.
     enabled: searchTerm !== undefined,
@@ -34,7 +35,7 @@ export default function FindEventSection() {
   if (isError) {
     content = (
       <ErrorBlock
-        title="An Error occured"
+        title='An Error occured'
         message={error.info?.message || "Failed to fetch data"}
       />
     );
@@ -42,7 +43,7 @@ export default function FindEventSection() {
 
   if (data) {
     content = (
-      <ul className="events-list">
+      <ul className='events-list'>
         {data.map((event) => (
           <li key={event.id}>
             <EventItem event={event} />
@@ -53,13 +54,13 @@ export default function FindEventSection() {
   }
 
   return (
-    <section className="content-section" id="all-events-section">
+    <section className='content-section' id='all-events-section'>
       <header>
         <h2>Find your next event!</h2>
-        <form onSubmit={handleSubmit} id="search-form">
+        <form onSubmit={handleSubmit} id='search-form'>
           <input
-            type="search"
-            placeholder="Search events"
+            type='search'
+            placeholder='Search events'
             ref={searchElement}
           />
           <button>Search</button>

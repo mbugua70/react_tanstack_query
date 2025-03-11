@@ -103,6 +103,8 @@ export default function EventDetails() {
     );
   }
 
+  console.log(DeleteError)
+
   return (
     <>
       {/* modal for deletion */}

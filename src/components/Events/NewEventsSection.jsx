@@ -54,6 +54,8 @@ export default function NewEventsSection() {
     // staletime is used to set after how long react query should update the new data backend .
     staleTime: 5000,
     // the key below is used to set how long the data should be cached in react query,
+    // gabageCollection time
+    // how long the data in the cache will be kept around.
     // gcTime: 1000,
   });
 
@@ -95,3 +97,6 @@ export default function NewEventsSection() {
     </section>
   );
 }
+
+
+// By default when when data in the backend changes then you go back to your page from another page in the frontend.. your data will updated.
